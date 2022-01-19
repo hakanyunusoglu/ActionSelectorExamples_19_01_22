@@ -21,6 +21,18 @@ namespace CustomActionSelector.Controllers
                 return controllerContext.HttpContext.Request.IsAjaxRequest();
             }
         }
+        public class ActionLengthAttribute : ActionNameSelectorAttribute
+        {
+            private int _length;
+            public ActionLengthAttribute(int length)
+            {
+                _length = length;
+            }
+            public override bool IsValidName(ControllerContext controllerContext, string actionName, MethodInfo methodInfo)
+            {
+                return actionName.Length <= _length;
+            }
+        }
         public ActionResult Index()
         {
             return View();
@@ -42,6 +54,12 @@ namespace CustomActionSelector.Controllers
                 }
             };
             return Json(products, JsonRequestBehavior.AllowGet);
+        }
+        [ActionLength(3)]
+        [ActionName("abc")]
+        public ActionResult test()
+        {
+            return Content("test");
         }
     }
 }
